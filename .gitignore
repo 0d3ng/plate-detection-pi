@@ -10,9 +10,6 @@
 /bin/
 /__pycache__/
 
-### dataset no needed ###
-#/dataset/
-
 ### model ###
 *.pb
 *.model

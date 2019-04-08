@@ -1,0 +1,24 @@
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+
+### venv ###
+/include/
+/lib/
+/bin/
+/__pycache__/
+
+### dataset no needed ###
+/dataset/
+
+### model ###
+*.pb
+*.model
+*.pickle
+*.txt
+*.dat
+*.vec
+*.xml
+*.jpg

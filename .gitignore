@@ -14,7 +14,6 @@
 *.pb
 *.model
 *.pickle
-*.txt
 *.dat
 *.vec
 *.xml

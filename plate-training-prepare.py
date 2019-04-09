@@ -5,7 +5,7 @@
 #  Telegram: @nopriant0
 
 import os
-import tqdm
+from tqdm import tqdm
 import cv2
 import random
 import numpy as np

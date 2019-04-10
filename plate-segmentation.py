@@ -9,6 +9,7 @@ import os
 
 # Lokasi hasil pelat
 path_plate = "dataset/sliced"
+data_dir_testing = "dataset/testing"
 
 # Looping file di direktori
 for name_file in sorted(os.listdir(path_plate)):
@@ -31,7 +32,8 @@ for name_file in sorted(os.listdir(path_plate)):
     # cv2.waitKey()
 
     # Image morfologi, opening
-    erode = cv2.erode(bw.copy(), cv2.getStructuringElement(cv2.MORPH_OPEN, (3, 6)))
+    erode = cv2.erode(bw.copy(), cv2.getStructuringElement(cv2.MORPH_OPEN, (3, 3)))
+    sliced = erode.copy()
     cv2.imwrite("segmentasi-erode.jpg", erode)
     # cv2.imshow("erode", erode)
     # cv2.waitKey()
@@ -40,14 +42,27 @@ for name_file in sorted(os.listdir(path_plate)):
     contours, hierarchy = cv2.findContours(erode.copy(), cv2.RETR_TREE, cv2.CHAIN_APPROX_NONE)
 
     # Looping contours untuk mendapatkan kontur yang sesuai
+    idx = 0
     for cnt in contours:
         x, y, w, h = cv2.boundingRect(cnt)
         ras = format(w / h, '.2f')
         # print("x={}, y={}, w={}, h={}, rasio={}".format(x, y, w, h, ras))
         if h >= 40 and w >= 10 and float(ras) <= 1:
             # Gambar segiempat hasil segmentasi warna merah
-            cv2.rectangle(src, (x, y), (x + w, y + h), (0, 0, 255), thickness=1)
+            # x = -2
+            # y = -2
+            h += 1
+            w += 1
+            cv2.rectangle(src, (x - 1, y - 1), (x + w, y + h), (0, 0, 255), thickness=1)
+            # cv2.rectangle(src, (x, y), (x + w, y + h), (0, 0, 255), thickness=1)
             print("+ x={}, y={}, w={}, h={}, rasio={}".format(x, y, w, h, ras))
+            # Buat direktori berdasarkan nama file
+            if not os.path.exists(os.path.join(data_dir_testing, os.path.splitext(name_file)[0])):
+                os.mkdir(os.path.join(data_dir_testing, os.path.splitext(name_file)[0]))
+            crop = sliced[y - 1:y + h, x - 1:x + w]
+            # crop = sliced[y:y + h, x:x + w]
+            cv2.imwrite(os.path.join(data_dir_testing, os.path.splitext(name_file)[0], str(idx) + ".jpg"), crop)
+            idx += 1
     cv2.imwrite("segmentasi-result.jpg", src)
-    cv2.imshow("result", src)
-    cv2.waitKey()
+    # cv2.imshow("result", src)
+    # cv2.waitKey()

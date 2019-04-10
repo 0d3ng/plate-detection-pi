@@ -1,6 +1,6 @@
 #  Created by od3ng on 09/04/2019 02:43:48 PM.
 #  Project: plate-recognition-pi
-#  File: plate-training-prepare.py
+#  File: plate-training-bak-prepare.py
 #  Email: lepengdados@gmail.com
 #  Telegram: @nopriant0
 
@@ -11,29 +11,29 @@ import random
 import numpy as np
 import pickle
 
-# Direktori data training
-DATADIR = "dataset/training"
+# Direktori data training-bak
+DATADIR = "dataset/training-bak"
 dirs = []
 
 training_data = []
 width, height = 100, 100
 
-# Looping direktori data training untuk diambil nama karakternya
+# Looping direktori data training-bak untuk diambil nama karakternya
 for char_name in sorted(os.listdir(DATADIR)):
     dirs.append(char_name)
 
-# Looping semua image data training untuk diubah menjadi array
+# Looping semua image data training-bak untuk diubah menjadi array
 for char_name in dirs:
     path = os.path.join(DATADIR, char_name)
     class_number = dirs.index(char_name)
     for img in tqdm(os.listdir(path)):
         try:
-            img_array = cv2.imread(os.path.join(path, img))
+            img_array = cv2.imread(os.path.join(path, img), cv2.IMREAD_ANYCOLOR)
             new_array = cv2.resize(img_array, (width, height))
             training_data.append([new_array, class_number])
         except Exception as e:
             pass
-
+print(len(training_data))
 random.shuffle(training_data)
 X = []
 Y = []

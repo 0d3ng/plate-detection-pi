@@ -1,6 +1,6 @@
 #  Created by od3ng on 09/04/2019 04:49:20 PM.
 #  Project: plate-recognition-pi
-#  File: plate-training.py
+#  File: plate-training-bak.py
 #  Email: lepengdados@gmail.com
 #  Telegram: @nopriant0
 
@@ -43,6 +43,6 @@ adam = Adam(lr=0.0001)
 model = Model(inputs=inputs, outputs=outputs)
 model.compile(optimizer=adam, loss='categorical_crossentropy', metrics=['accuracy'])
 
-model.fit(X, Y, epochs=20, verbose=1)
+model.fit(X, Y, epochs=45, verbose=1)
 
 model.save('anpr.model')

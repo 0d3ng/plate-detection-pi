@@ -11,9 +11,5 @@
 /__pycache__/
 
 ### model ###
-*.pb
 *.model
 *.pickle
-*.dat
-*.vec
-*.xml

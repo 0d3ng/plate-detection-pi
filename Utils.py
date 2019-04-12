@@ -1,4 +1,3 @@
-
 #  Created by od3ng on 08/04/2019 11:36:14 AM.
 #  Project: plate-recognition-pi
 #  File: Utils.py
@@ -47,6 +46,7 @@ def mse(image_a, image_b):
     err = np.sum((image_a.astype("float") - image_b.astype("float")) ** 2)
     err /= float(image_a.shape[0] * image_a.shape[1])
     return err
+
 
 def rotate_image(image, angle):
     '''Rotate image "angle" degrees.
@@ -181,6 +181,22 @@ def adjust_gamma(image, gamma=1.0):
     table = np.array([((i / 255.0) ** invGamma) * 255
                       for i in np.arange(0, 256)]).astype("uint8")
     return cv2.LUT(image, table)
+
+
+def sort_contours(contours, method="left-to-right"):
+    reverse = False
+    index = 0
+
+    if method == "right-to-left" or method == "bottom-to-top":
+        reverse = True
+
+    if method == "top-to-bottom" or method == "bottom-to-top":
+        index = 1
+
+    bounding_boxes = [cv2.boundingRect(c) for c in contours]
+    contours, bounding_boxes = zip(*sorted(zip(contours, bounding_boxes), key=lambda b: b[1][index], reverse=reverse))
+
+    return contours, bounding_boxes
 
 
 if __name__ == '__main__':

@@ -10,7 +10,7 @@ import cv2
 import tensorflow as tf
 import numpy as np
 
-data_dir_training = "dataset/training-bak"
+data_dir_training = "dataset/training"
 data_dir_testing = "dataset/testing"
 dirs = []
 width, height = 100, 100

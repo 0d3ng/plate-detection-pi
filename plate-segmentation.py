@@ -6,6 +6,7 @@
 
 import cv2
 import os
+import Utils
 
 # Lokasi hasil pelat
 path_plate = "dataset/sliced"
@@ -41,28 +42,36 @@ for name_file in sorted(os.listdir(path_plate)):
     # Ekstraksi kontur
     contours, hierarchy = cv2.findContours(erode.copy(), cv2.RETR_TREE, cv2.CHAIN_APPROX_NONE)
 
+    contours_temps = []
+
     # Looping contours untuk mendapatkan kontur yang sesuai
-    idx = 0
     for cnt in contours:
         x, y, w, h = cv2.boundingRect(cnt)
         ras = format(w / h, '.2f')
         # print("x={}, y={}, w={}, h={}, rasio={}".format(x, y, w, h, ras))
         if h >= 40 and w >= 10 and float(ras) <= 1:
             # Gambar segiempat hasil segmentasi warna merah
-            # x = -2
-            # y = -2
             h += 1
             w += 1
             cv2.rectangle(src, (x - 1, y - 1), (x + w, y + h), (0, 0, 255), thickness=1)
-            # cv2.rectangle(src, (x, y), (x + w, y + h), (0, 0, 255), thickness=1)
             print("+ x={}, y={}, w={}, h={}, rasio={}".format(x, y, w, h, ras))
-            # Buat direktori berdasarkan nama file
-            if not os.path.exists(os.path.join(data_dir_testing, os.path.splitext(name_file)[0])):
-                os.mkdir(os.path.join(data_dir_testing, os.path.splitext(name_file)[0]))
-            crop = sliced[y - 1:y + h, x - 1:x + w]
-            # crop = sliced[y:y + h, x:x + w]
-            cv2.imwrite(os.path.join(data_dir_testing, os.path.splitext(name_file)[0], str(idx) + ".jpg"), crop)
-            idx += 1
+            contours_temps.append(cnt)
     cv2.imwrite("segmentasi-result.jpg", src)
+
+    # Sorting contour terlebih dahulu agar karakter pembacaan dari kiri ke kanan
+    contours, bounding_boxes = Utils.sort_contours(contours_temps)
+
+    idx = 0
+    for c in contours:
+        x, y, w, h = cv2.boundingRect(c)
+        h += 1
+        w += 1
+        # Buat direktori berdasarkan nama file
+        if not os.path.exists(os.path.join(data_dir_testing, os.path.splitext(name_file)[0])):
+            os.mkdir(os.path.join(data_dir_testing, os.path.splitext(name_file)[0]))
+        crop = sliced[y - 1:y + h, x - 1:x + w]
+        cv2.imwrite(os.path.join(data_dir_testing, os.path.splitext(name_file)[0], str(idx) + ".jpg"), crop)
+        idx += 1
+
     # cv2.imshow("result", src)
     # cv2.waitKey()
